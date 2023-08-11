@@ -2,7 +2,7 @@
 <hr>
 
 
-<form autocomplete="off">
+<form autocomplete="off" [formGroup]="mySwitchesForm" (ngSubmit)="onSubmit()">
 
     <!-- Radio -->
     <div class="row mb-3">
@@ -13,7 +13,9 @@
                 <input class="form-check-input"
                        type="radio"
                        value="M"
-                       id="radioMasculino">
+                       id="radioMasculino"
+                       formControlName="gender"
+                       >
                 <label class="form-check-label" for="radioMasculino">
                   Masculino
                 </label>
@@ -23,12 +25,17 @@
                 <input class="form-check-input"
                        type="radio"
                        value="F"
-                       id="radioFemenino">
+                       id="radioFemenino"
+                       formControlName="gender"
+                       >
                 <label class="form-check-label" for="radioFemenino">
                   Femenino
                 </label>
             </div>
 
+            <span *ngIf="isValidField('gender')" class="form-text text-danger">
+              {{ getFieldError('gender') }}
+           </span>
         </div>
     </div>
 
@@ -40,7 +47,9 @@
             <div class="form-check form-switch mt-2">
                 <input class="form-check-input"
                        type="checkbox"
-                       id="flexSwitchCheckChecked">
+                       id="flexSwitchCheckChecked"
+                       formControlName="wantNotifications"
+                       >
                 <label class="form-check-label" for="flexSwitchCheckChecked">Quiero recibir notificaciones</label>
             </div>
 
@@ -54,13 +63,15 @@
             <div class="form-check">
                 <input class="form-check-input"
                        type="checkbox"
-                       id="flexCheckDefault">
+                       id="flexCheckDefault"
+                       formControlName="termsAndConditions"
+                       >
                 <label class="form-check-label" for="flexCheckDefault">
                   Términos y condiciones de uso
                 </label>
               </div>
-              <span class="form-text text-danger">
-                 Debe de aceptar las condiciones de uso
+              <span *ngIf="isValidField('termsAndConditions')" class="form-text text-danger">
+                 {{ getFieldError('termsAndConditions') }}
               </span>
 
         </div>
@@ -81,15 +92,25 @@
 
 
 <h5>Valor del formulario</h5>
-<pre>{{ 'object' | json }}</pre>
+<pre>{{ person | json }}</pre>
 <br>
 
-<h5>Persona</h5>
-<pre>{{ 'object' | json }}</pre>
+<h5>Genero</h5>
+<pre>{{ mySwitchesForm.controls['gender'].value | json }}</pre>
+<span>Errores</span>
+<pre>{{ mySwitchesForm.controls['gender'].errors | json }}</pre>
 <br>
 
-<h5>Valid</h5>
-<pre>{{ 'object' | json }}</pre>
+<h5>Notoficaciones</h5>
+<pre>{{ mySwitchesForm.controls['wantNotifications'].value | json }}</pre>
+<span>Errores</span>
+<pre>{{ mySwitchesForm.controls['wantNotifications'].errors | json }}</pre>
+<br>
+
+<h5>Terminos y Condiciones</h5>
+<pre>{{ mySwitchesForm.controls['termsAndConditions'].value | json }}</pre>
+<span>Errores</span>
+<pre>{{ mySwitchesForm.controls['termsAndConditions'].errors | json }}</pre>
 
 <!-- <h5>Términos</h5> -->
 <!-- <pre>{{ myForm.controls?.terminos?.errors | json }}</pre> -->
