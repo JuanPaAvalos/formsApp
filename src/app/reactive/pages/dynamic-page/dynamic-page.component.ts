@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { ValidatorsService } from 'src/app/shared/services/validators.service';
 
 @Component({
   selector: 'app-dynamic-page',
@@ -33,16 +34,19 @@ export class DynamicPageComponent {
     Validators.minLength(3),
   ]); //* Crea un campo unico de formcontrol
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private validatorsSerice: ValidatorsService) {}
 
   get favoriteGames() {
     return this.myDynamicForm.get('favoriteGames') as FormArray; //* obtener el arreglo y retornar con el tipo formArray
   }
 
   isValidField(field: string): boolean | null {
+    return this.validatorsSerice.isValidField(this.myDynamicForm, field)
+  }
+
+  isValidFieldInArray(FormArray: FormArray, index: number) {
     return (
-      this.myDynamicForm.controls[field].errors &&
-      this.myDynamicForm.controls[field].touched
+      FormArray.controls[index].errors && FormArray.controls[index].touched
     );
   }
 
@@ -63,12 +67,6 @@ export class DynamicPageComponent {
     }
 
     return null;
-  }
-
-  isValidFieldInArray(FormArray: FormArray, index: number) {
-    return (
-      FormArray.controls[index].errors && FormArray.controls[index].touched
-    );
   }
 
   onAddToFavorites() {
