@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidatorsService } from 'src/app/shared/services/validators.service';
+import { EmailValidatorService } from 'src/app/shared/validators/email-validator.service';
 import * as customValidators from 'src/app/shared/validators/validators';
 
 @Component({
@@ -11,25 +12,35 @@ import * as customValidators from 'src/app/shared/validators/validators';
 export class RegisterPageComponent {
   public myForm: FormGroup = this.formBuilder.group({
     name: [
-      '',
+      'juan avalos',
       [
         Validators.required,
         Validators.pattern(this.validatorsSerice.firstNameAndLastnamePattern),
       ],
     ],
     email: [
-      '',
-      [Validators.required, Validators.pattern(this.validatorsSerice.emailPattern)],
+      'juandeitri@gmail.com',
+      [
+        Validators.required,
+        Validators.pattern(this.validatorsSerice.emailPattern),
+      ],
+      // [new EmailValidatorService()] //*los validadores asyncronos pueden ser llamados de esta manera o instanciados en el constructor
+      [this.emailValidator],
     ],
     //* las validaciones personalizadas (cantBeStrider) deben ser referenciadas y no llamadas como funcion
-    username: ['', [Validators.required, this.validatorsSerice.cantBeStrider]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-    confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
+    //! Por algun motivo las validaciones que tienen error al momento de hacer reset() afectan el reset de los campos posteriores
+    username: [
+      'juanuser',
+      [Validators.required, this.validatorsSerice.cantBeStrider],
+    ],
+    passwordConfirmation: ['123123', [Validators.required]],
+    password: ['123123', [Validators.required, Validators.minLength(6)]],
   });
 
   constructor(
     private formBuilder: FormBuilder,
-    private validatorsSerice: ValidatorsService
+    private validatorsSerice: ValidatorsService,
+    private emailValidator: EmailValidatorService
   ) {}
 
   // ngOnInit(): void {
@@ -37,7 +48,7 @@ export class RegisterPageComponent {
   // }
 
   isValidField(field: string): boolean | null {
-    return this.validatorsSerice.isValidField(this.myForm, field)
+    return this.validatorsSerice.isValidField(this.myForm, field);
   }
 
   getFieldError(field: string): string | null {
@@ -53,6 +64,8 @@ export class RegisterPageComponent {
           return `Se requieren al menos ${errors['minlength'].requiredLength} caracteres`;
         case 'min':
           return `Se rquiere un valor minimo de ${errors['min'].min}`;
+        case 'noStrider':
+          return `El username no puede ser Strider`;
       }
     }
 
