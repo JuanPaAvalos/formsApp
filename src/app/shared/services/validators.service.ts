@@ -11,6 +11,8 @@ export class ValidatorsService {
 
 //* los validadores reciben todo el control que estamos comprobando
   public cantBeStrider = (control: FormControl): ValidationErrors | null => {
+    if(control.value === "" || control.value === null) return null
+
     const value = control.value.trim().toLowerCase();
 
     if (value == 'strider') {
