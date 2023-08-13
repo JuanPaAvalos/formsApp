@@ -34,21 +34,44 @@ export class ValidatorsService {
   }
 
   isFieldOneEqualFieldTwo(fieldOne: string, fieldTwo: string) {
-
     //* Obtiene de manera implicita el formulario y lo manjea con AbstractControl
     return (formGroup: AbstractControl): ValidationErrors | null => {
-
       const fieldValue1 = formGroup.get(fieldOne)?.value || '';
       const fieldValue2 = formGroup.get(fieldTwo)?.value || '';
 
       if (fieldValue1 !== fieldValue2) {
         formGroup.get(fieldTwo)?.setErrors({ notEqual: true }); //*establece el error del campo del form
-        return { notEqual: true };  //*Retorna el error
+        return { notEqual: true }; //*Retorna el error
       }
 
-       //*elimina el error del campo y regresa que no hay errores
+      //*elimina el error del campo y regresa que no hay errores
       formGroup.get(fieldTwo)?.setErrors(null);
       return null;
     };
+  }
+
+  public getFieldErrors(form: FormGroup, field: string): string | null {
+    const errors = form.controls[field].errors || {};
+
+    for (const key of Object.keys(errors)) {
+      switch (key) {
+        case 'required':
+          return 'Este campo es requerido';
+        case 'minlength':
+          return `Se requieren al menos ${errors['minlength'].requiredLength} caracteres`;
+        case 'min':
+          return `Se rquiere un valor minimo de ${errors['min'].min}`;
+        case 'noStrider':
+          return `El username no puede ser Strider`;
+        case 'pattern':
+          return `Ingrese un elemento valido`;
+        case 'notEqual':
+          return `Los valores de los campos no son iguales`;
+        default:
+          return `ERROR NOT DEFINED`;
+      }
+    }
+
+    return null
   }
 }
