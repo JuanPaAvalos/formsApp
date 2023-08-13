@@ -31,7 +31,7 @@
             formControlName="email"
           />
           <span *ngIf="isValidField('email')" class="form-text text-danger">
-            mensaje de error del email
+            {{ getFieldError("email") }}
           </span>
         </div>
       </div>
@@ -64,7 +64,7 @@
           />
 
           <span *ngIf="isValidField('password')" class="form-text text-danger">
-            La contraseña debe de ser mayor de 6 caracteres.
+            {{ getFieldError("password") }}
           </span>
         </div>
       </div>
@@ -84,7 +84,7 @@
             *ngIf="isValidField('passwordConfirmation')"
             class="form-text text-danger"
           >
-            Las contraseñas deben de ser iguales
+          {{ getFieldError("passwordConfirmation") }}
           </span>
         </div>
       </div>

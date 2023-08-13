@@ -10,42 +10,35 @@ import * as customValidators from 'src/app/shared/validators/validators';
   styles: [],
 })
 export class RegisterPageComponent {
-  public myForm: FormGroup = this.formBuilder.group({
-    name: [
-      'juan avalos',
-      [
-        Validators.required,
-        Validators.pattern(this.validatorsSerice.firstNameAndLastnamePattern),
+  public myForm: FormGroup = this.formBuilder.group(
+    {
+      name: ['',[Validators.required,Validators.pattern(this.validatorsSerice.firstNameAndLastnamePattern),],],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(this.validatorsSerice.emailPattern),
+        ],
+        // [new EmailValidatorService()] //*los validadores asyncronos pueden ser llamados de esta manera o instanciados en el constructor
+        [this.emailValidator],
       ],
-    ],
-    email: [
-      'juandeitri@gmail.com',
-      [
-        Validators.required,
-        Validators.pattern(this.validatorsSerice.emailPattern),
-      ],
-      // [new EmailValidatorService()] //*los validadores asyncronos pueden ser llamados de esta manera o instanciados en el constructor
-      [this.emailValidator],
-    ],
-    //* las validaciones personalizadas (cantBeStrider) deben ser referenciadas y no llamadas como funcion
-    //! Por algun motivo las validaciones que tienen error al momento de hacer reset() afectan el reset de los campos posteriores
-    username: [
-      'juanuser',
-      [Validators.required, this.validatorsSerice.cantBeStrider],
-    ],
-    passwordConfirmation: ['123123', [Validators.required]],
-    password: ['123123', [Validators.required, Validators.minLength(6)]],
-  });
+      //* las validaciones personalizadas (cantBeStrider) deben ser referenciadas y no llamadas como funcion
+      //! Por algun motivo las validaciones que tienen error al momento de hacer reset() afectan el reset de los campos posteriores
+      username: ['',[Validators.required, this.validatorsSerice.cantBeStrider]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      passwordConfirmation: ['', [Validators.required]],
+    },{
+      //* validadores a nivel de formulario - Pasan como argumento implicito TODO EL FORMULARIO
+    validators: [
+      this.validatorsSerice.isFieldOneEqualFieldTwo('password','passwordConfirmation') //? se pasan los nombres de los controles
+    ]}
+  );
 
   constructor(
     private formBuilder: FormBuilder,
     private validatorsSerice: ValidatorsService,
     private emailValidator: EmailValidatorService
   ) {}
-
-  // ngOnInit(): void {
-  //   this.myForm.reset()
-  // }
 
   isValidField(field: string): boolean | null {
     return this.validatorsSerice.isValidField(this.myForm, field);
@@ -66,6 +59,10 @@ export class RegisterPageComponent {
           return `Se rquiere un valor minimo de ${errors['min'].min}`;
         case 'noStrider':
           return `El username no puede ser Strider`;
+        case 'pattern':
+          return `Ingrese un elemento valido`;
+        case 'notEqual':
+          return `Los valores de los campos no son iguales`;
       }
     }
 
