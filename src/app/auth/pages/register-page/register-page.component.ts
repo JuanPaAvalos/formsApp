@@ -47,26 +47,7 @@ export class RegisterPageComponent {
   getFieldError(field: string): string | null {
     if (!this.myForm.controls[field]) return null;
 
-    const errors = this.myForm.controls[field].errors || {};
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'minlength':
-          return `Se requieren al menos ${errors['minlength'].requiredLength} caracteres`;
-        case 'min':
-          return `Se rquiere un valor minimo de ${errors['min'].min}`;
-        case 'noStrider':
-          return `El username no puede ser Strider`;
-        case 'pattern':
-          return `Ingrese un elemento valido`;
-        case 'notEqual':
-          return `Los valores de los campos no son iguales`;
-      }
-    }
-
-    return null;
+    return this.validatorsSerice.getFieldErrors(this.myForm, field);
   }
 
   onSubmit(): void {

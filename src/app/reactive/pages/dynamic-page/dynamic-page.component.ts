@@ -53,6 +53,9 @@ export class DynamicPageComponent {
   getFieldError(field: string): string | null {
     if (!this.myDynamicForm.controls[field]) return null;
 
+    return this.validatorsSerice.getFieldErrors(this.myDynamicForm, field)
+
+
     const errors = this.myDynamicForm.controls[field].errors || {};
 
     for (const key of Object.keys(errors)) {

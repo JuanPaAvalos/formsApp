@@ -33,22 +33,7 @@ export class SwitchesPageComponent {
   getFieldError(field: string): string | null {
     if (!this.mySwitchesForm.controls[field]) return null;
 
-    const errors = this.mySwitchesForm.controls[field].errors || {};
-
-    for (const key of Object.keys(errors)) {
-      switch (key) {
-        case 'required':
-          return 'Este campo es requerido';
-        case 'minlength':
-          return `Se requieren al menos ${errors['minlength'].requiredLength} caracteres`;
-        case 'min':
-          return `Se rquiere un valor minimo de ${errors['min'].min}`;
-        case 'required':
-          return `Se rquiere un aceptar este campo`;
-      }
-    }
-
-    return null;
+    return this.validatorsSerice.getFieldErrors(this.mySwitchesForm, field)
   }
 
   onSubmit() {
